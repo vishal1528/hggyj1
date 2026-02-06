@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>  Will You Be My Valentine?</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffd6e7 0%, #ffeff6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Stage container styling */
+        .stage {
+            background-color: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            padding: 40px 30px;
+            margin: 0 auto;
+            transition: all 0.5s ease;
+            opacity: 1;
+            transform: translateY(0);
+            max-width: 700px;
+            border: 4px solid #ff9ec0;
+            backdrop-filter: blur(8px);
+        }
+        
+        .stage.hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        /* Image container */
+        .image-container {
+            margin: 25px auto;
+            width: 100%;
+            max-width: 500px;
+            height: 350px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            border: 12px solid white;
+            position: relative;
+        }
+        
+        .stage-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* Video container */
+        .video-container {
+    margin: 25px auto;
+    width: 360px;              /* scaled size for screen */
+    height: 640px;             /* keeps 9:16 ratio */
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border: 12px solid white;
+    position: relative;
+    display: none;
+    background: black;
+}
+
+        
+        .stage-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+        
+        .image-caption {
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        /* Text styling */
+        h1 {
+            color: #d81b60;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stage-text {
+            font-size: 1.4rem;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 18px 45px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            min-width: 170px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            z-index: 20;
+        }
+        
+        .btn-yes {
+            background: linear-gradient(to right, #ff4081, #ff79a9);
+            color: white;
+        }
+        
+        .btn-yes:hover {
+            background: linear-gradient(to right, #e91e63, #ff4081);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(233, 30, 99, 0.5);
+        }
+        
+        .btn-no {
+            background: linear-gradient(to right, #6a7b8c, #8e9daa);
+            color: white;
+        }
+        
+        .btn-no:hover {
+            background: linear-gradient(to right, #5a6b7c, #7e8d9a);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(90, 107, 124, 0.5);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .counter {
+            margin-top: 25px;
+            font-size: 1.2rem;
+            color: #888;
+            font-style: italic;
+        }
+        
+        .stage-3-text {
+            font-size: 2.5rem;
+            color: #d81b60;
+            margin: 30px 0;
+            font-weight: bold;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .stage-text {
+                font-size: 1.2rem;
+            }
+            
+            .image-container, .video-container {
+                height: 280px;
+                border-width: 8px;
+            }
+            
+            .buttons-container {
+                gap: 20px;
+            }
+            
+            .btn {
+                padding: 16px 35px;
+                font-size: 1.3rem;
+                min-width: 150px;
+            }
+            
+            .stage-3-text {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .stage {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .image-container, .video-container {
+                height: 220px;
+                border-width: 6px;
+            }
+            
+            .buttons-container {
+                flex-direction: row; 
+                align-items: center;
+                justify-content: center;
+                gap: 15px; 
+            }
+            
+            .btn {
+                width: auto;  
+                max-width: 48%; 
+                min-width: 140px; 
+                padding: 14px 25px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .stage {
+                padding: 25px 15px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .stage-text {
+                font-size: 1.1rem;
+            }
+            
+            .image-container, .video-container {
+                height: 200px;
+            }
+            
+            .buttons-container {
+                gap: 10px; 
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 1.1rem;
+                min-width: 130px;
+                max-width: 48%;
+            }
+            
+            .stage-3-text {
+                font-size: 1.8rem;
+            }
+        }
+        
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .floating-heart {
+            position: absolute;
+            opacity: 0.7;
+            animation: float 25s infinite linear;
+            z-index: 1;
+            transform-origin: center;
+        }
+        
+        .floating-heart.tiny {
+            font-size: 8px;
+            opacity: 0.3;
+        }
+        
+        .floating-heart.small {
+            font-size: 16px;
+            opacity: 0.5;
+        }
+        
+        .floating-heart.medium {
+            font-size: 26px;
+            opacity: 0.7;
+        }
+        
+        .floating-heart.large {
+            font-size: 40px;
+            opacity: 0.8;
+        }
+        
+        .floating-heart.xlarge {
+            font-size: 55px;
+            opacity: 0.9;
+        }
+        
+        .floating-heart.xxlarge {
+            font-size: 70px;
+            opacity: 0.95;
+        }
+        
+        .floating-heart.pink {
+            color: #ff9ec0;
+            text-shadow: 0 0 15px rgba(255, 158, 192, 0.5);
+        }
+        
+        .floating-heart.black {
+            color: #333;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+        }
+        
+        .floating-heart.red {
+            color: #ff4081;
+            text-shadow: 0 0 15px rgba(255, 64, 129, 0.5);
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(var(--start-rotate, 0deg));
+                opacity: 0;
+            }
+            5% {
+                opacity: var(--heart-opacity, 0.8);
+            }
+            95% {
+                opacity: calc(var(--heart-opacity, 0.8) * 0.6);
+            }
+            100% {
+                transform: translateY(-100px) translateX(var(--end-x, calc(100vw - 100px))) rotate(var(--end-rotate, 360deg));
+                opacity: 0;
+            }
+        }
+        
+        @keyframes float2 {
+            0% {
+                transform: translateY(100vh) translateX(100vw) rotate(var(--start-rotate, 0deg));
+                opacity: 0;
+            }
+            5% {
+                opacity: var(--heart-opacity, 0.8);
+            }
+            95% {
+                opacity: calc(var(--heart-opacity, 0.8) * 0.6);
+            }
+            100% {
+                transform: translateY(-100px) translateX(-100px) rotate(var(--end-rotate, 360deg));
+                opacity: 0;
+            }
+        }
+        
+        @keyframes float3 {
+            0% {
+                transform: translateY(100vh) translateX(50vw) rotate(var(--start-rotate, 0deg));
+                opacity: 0;
+            }
+            5% {
+                opacity: var(--heart-opacity, 0.8);
+            }
+            95% {
+                opacity: calc(var(--heart-opacity, 0.8) * 0.6);
+            }
+            100% {
+                transform: translateY(-100px) translateX(calc(50vw + 100px)) rotate(var(--end-rotate, -360deg));
+                opacity: 0;
+            }
+        }
+        
+        @keyframes float4 {
+            0% {
+                transform: translateY(100vh) translateX(30vw) rotate(var(--start-rotate, 0deg));
+                opacity: 0;
+            }
+            5% {
+                opacity: var(--heart-opacity, 0.8);
+            }
+            95% {
+                opacity: calc(var(--heart-opacity, 0.8) * 0.6);
+            }
+            100% {
+                transform: translateY(-100px) translateX(calc(30vw + 200px)) rotate(var(--end-rotate, 180deg));
+                opacity: 0;
+            }
+        }
+        
+        @keyframes float5 {
+            0% {
+                transform: translateY(100vh) translateX(70vw) rotate(var(--start-rotate, 0deg));
+                opacity: 0;
+            }
+            5% {
+                opacity: var(--heart-opacity, 0.8);
+            }
+            95% {
+                opacity: calc(var(--heart-opacity, 0.8) * 0.6);
+            }
+            100% {
+                transform: translateY(-100px) translateX(calc(70vw - 200px)) rotate(var(--end-rotate, -180deg));
+                opacity: 0;
+            }
+        }
+        
+        .static-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .static-heart {
+            position: absolute;
+            opacity: 0.2;
+            animation: rotate-pulse 12s infinite ease-in-out;
+            transform-origin: center;
+        }
+        
+        .static-heart.pink {
+            color: #ff9ec0;
+        }
+        
+        .static-heart.black {
+            color: #333;
+        }
+        
+        .static-heart.red {
+            color: #ff4081;
+        }
+        
+        @keyframes rotate-pulse {
+            0% {
+                transform: scale(1) rotate(var(--start-angle, 0deg));
+                opacity: 0.15;
+            }
+            25% {
+                transform: scale(1.15) rotate(calc(var(--start-angle, 0deg) + 90deg));
+                opacity: 0.25;
+            }
+            50% {
+                transform: scale(1.3) rotate(calc(var(--start-angle, 0deg) + 180deg));
+                opacity: 0.3;
+            }
+            75% {
+                transform: scale(1.15) rotate(calc(var(--start-angle, 0deg) + 270deg));
+                opacity: 0.25;
+            }
+            100% {
+                transform: scale(1) rotate(calc(var(--start-angle, 0deg) + 360deg));
+                opacity: 0.15;
+            }
+        }
+        
+        .extra-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .extra-heart {
+            position: absolute;
+            opacity: 0.15;
+            animation: drift-rotate 50s infinite linear;
+            transform-origin: center;
+        }
+        
+        .extra-heart.pink {
+            color: #ff9ec0;
+        }
+        
+        .extra-heart.black {
+            color: #333;
+        }
+        
+        .extra-heart.red {
+            color: #ff4081;
+        }
+        
+        /* Enhanced drift animation with rotation */
+        @keyframes drift-rotate {
+            0% {
+                transform: translateX(0) translateY(0) rotate(var(--start-angle, 0deg));
+                opacity: 0.1;
+            }
+            25% {
+                transform: translateX(30px) translateY(30px) rotate(calc(var(--start-angle, 0deg) + 90deg));
+                opacity: 0.2;
+            }
+            50% {
+                transform: translateX(0) translateY(60px) rotate(calc(var(--start-angle, 0deg) + 180deg));
+                opacity: 0.25;
+            }
+            75% {
+                transform: translateX(-30px) translateY(30px) rotate(calc(var(--start-angle, 0deg) + 270deg));
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateX(0) translateY(0) rotate(calc(var(--start-angle, 0deg) + 360deg));
+                opacity: 0.1;
+            }
+        }
+        
+        .density-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .density-heart {
+            position: absolute;
+            opacity: 0.1;
+            animation: subtle-move 40s infinite ease-in-out;
+            transform-origin: center;
+        }
+        
+        .density-heart.pink {
+            color: #ff9ec0;
+        }
+        
+        .density-heart.black {
+            color: #333;
+        }
+        
+        .density-heart.red {
+            color: #ff4081;
+        }
+        
+        @keyframes subtle-move {
+            0%, 100% {
+                transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+                opacity: 0.08;
+            }
+            33% {
+                transform: translateX(15px) translateY(20px) rotate(120deg) scale(1.1);
+                opacity: 0.15;
+            }
+            66% {
+                transform: translateX(-10px) translateY(15px) rotate(240deg) scale(1.05);
+                opacity: 0.12;
+            }
+        }
+        
+        /* Controls for video */
+        .video-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 10;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .video-controls:hover {
+            opacity: 1;
+        }
+        
+        .video-btn {
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .video-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+        
+        .video-btn i {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="stage stage-1" id="stage1">
+            <h1>Can I ask you a question?</h1>
+            <p class="stage-text">I have something important to tell you...</p>
+            
+            <div class="image-container">
+                <img src="" 
+                     alt="" class="stage-image" id="stage1-image">
+            </div>
+            <p class="image-caption"></p>
+            
+            <div class="buttons-container">
+                <button class="btn btn-yes" id="stage1-yes">
+                    <i class="fas fa-heart"></i> Yes
+                </button>
+                <button class="btn btn-no" id="stage1-no">
+                    <i class="fas fa-question"></i> No
+                </button>
+            </div>
+            
+            <div class="counter" id="stage1-counter">
+                
+            </div>
+        </div>
+        
+        <!-- Stage 2: Valentine Proposal -->
+        <div class="stage stage-2 hidden" id="stage2">
+            <h1>🌸 Will you be my Valentine?</h1>
+            <p class="stage-text">I would be the happiest person if you said yes!</p>
+            
+            <div class="image-container" id="stage2-image-container">
+                <img src="" 
+                     alt="Valentine Image 1" class="stage-image" id="stage2-image">
+            </div>
+            
+            <!-- Video Container (Initially Hidden) -->
+            <div class="video-container" id="stage2-video-container">
+                <video class="stage-video" id="stage2-video" loop controls>
+                    <source src="valentine_video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-controls">
+                    <button class="video-btn" id="play-pause-btn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="video-btn" id="volume-btn">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <p class="image-caption"></p>
+            
+            <div class="buttons-container" id="stage2-buttons">
+                <button class="btn btn-yes" id="stage2-yes">
+                    <i class="fas fa-heart"></i> Yes!
+                </button>
+                <button class="btn btn-no" id="stage2-no">
+                    <i class="fas fa-times"></i> No
+                </button>
+            </div>
+            
+            <div class="counter" id="stage2-counter">
+                Click "No" to see different responses
+            </div>
+        </div>
+        
+        
+        <div class="stage stage-3 hidden" id="stage3">
+            <h1>You said YES!</h1>
+            
+            <div class="image-container">
+                <img src="ph4.jpg" 
+                     alt="" class="stage-image" id="stage3-image">
+            </div>
+            <p class="image-caption"></p>
+            
+            <div class="stage-3-text">
+                <i class="fas fa-heart"></i> You complete me <i class="fas fa-heart"></i>
+            </div>
+            
+            <p class="stage-text">
+  <span style="font-weight: bold; color: #ff4081;">I ASKED THE SKY FOR A SIGN,</span><br>
+  <span style="font-weight: bold; color: #ff4081;">IT ANSWERED WITH YOU.</span>
+</p>
+
+
+        </div>
+    </div>
+    
+    <!-- Floating hearts background - 520+ HEARTS -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <!-- Static background hearts with enhanced rotation -->
+    <div class="static-hearts" id="staticHearts"></div>
+    
+    <!-- Additional background layer for extra density -->
+    <div class="extra-hearts" id="extraHearts"></div>
+    
+    <!-- New density layer -->
+    <div class="density-hearts" id="densityHearts"></div>
+    
+    <script>
+        // Stage 1 variables
+        let stage1NoCount = 0;
+        const stage1Images = [
+            "photo.jpg", 
+            "photo12345.jpg", 
+            "photo1.jpg", 
+            "photo12.jpg", 
+            "photo123.jpg", 
+            "photo1234.jpg",
+            "photo123456.jpg"
+        ];
+        
+        // Stage 2 variables
+        let stage2NoCount = 0;
+        const stage2Images = [
+            "ph7.png", 
+            "ph5.jpg", 
+            "ph3.jpg", 
+            "ph2.jpg", 
+            "ph6.jpg", 
+            "ph8.jpg"  
+        ];
+        
+        // DOM elements
+        const stage1 = document.getElementById('stage1');
+        const stage2 = document.getElementById('stage2');
+        const stage3 = document.getElementById('stage3');
+        
+        const stage1Image = document.getElementById('stage1-image');
+        const stage1YesBtn = document.getElementById('stage1-yes');
+        const stage1NoBtn = document.getElementById('stage1-no');
+        const stage1Counter = document.getElementById('stage1-counter');
+        
+        const stage2Image = document.getElementById('stage2-image');
+        const stage2ImageContainer = document.getElementById('stage2-image-container');
+        const stage2VideoContainer = document.getElementById('stage2-video-container');
+        const stage2Video = document.getElementById('stage2-video');
+        const stage2YesBtn = document.getElementById('stage2-yes');
+        const stage2NoBtn = document.getElementById('stage2-no');
+        const stage2Counter = document.getElementById('stage2-counter');
+        const stage2Buttons = document.getElementById('stage2-buttons');
+        
+        const stage3Image = document.getElementById('stage3-image');
+        
+        // Video control elements
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const volumeBtn = document.getElementById('volume-btn');
+        
+        // Video variables
+        let isVideoPlaying = false;
+        let isVideoMuted = false;
+        
+        // Background heart variables - APPROXIMATELY 520+ HEARTS
+        const floatingHeartsContainer = document.getElementById('floatingHearts');
+        const staticHeartsContainer = document.getElementById('staticHearts');
+        const extraHeartsContainer = document.getElementById('extraHearts');
+        const densityHeartsContainer = document.getElementById('densityHearts');
+        
+        let floatingHearts = [];
+        let staticHearts = [];
+        let extraHearts = [];
+        let densityHearts = [];
+        
+        const totalFloatingHearts = 320;  // Increased by 200 (was 120)
+        const totalStaticHearts = 120;    // Adjusted
+        const totalExtraHearts = 100;     // Adjusted
+        const totalDensityHearts = 100;   // New layer
+        
+        // Create floating hearts with specific colors - 520+ TOTAL
+        function createFloatingHearts(heartType) {
+            // Clear existing hearts
+            floatingHeartsContainer.innerHTML = '';
+            floatingHearts = [];
+            
+            for (let i = 0; i < totalFloatingHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                
+                // Random properties for FULL background coverage
+                const sizeType = Math.floor(Math.random() * 6);
+                const sizeClass = ['tiny', 'small', 'medium', 'large', 'xlarge', 'xxlarge'][sizeType];
+                heart.classList.add(sizeClass);
+                
+                // Random starting position - DISTRIBUTED ALL OVER
+                const left = Math.random() * 100; // Random horizontal position (0-100%)
+                const topStart = Math.random() * 120; // Start from anywhere (even above screen)
+                const delay = Math.random() * 30;
+                const duration = Math.random() * 20 + 30; // Longer duration
+                const opacity = 0.4 + Math.random() * 0.5;
+                
+                // Random rotation angles
+                const startRotate = Math.random() * 360;
+                const endRotate = startRotate + 360 + (Math.random() * 180 - 90);
+                
+                // Random animation type for variety - 5 different animations
+                const animationType = Math.floor(Math.random() * 5);
+                const animationName = ['float', 'float2', 'float3', 'float4', 'float5'][animationType];
+                
+                // Random end position
+                const endX = Math.random() * 200 - 100; // Random horizontal movement
+                
+                heart.style.left = `${left}%`;
+                heart.style.top = `${topStart}%`;
+                heart.style.animationDelay = `${delay}s`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.animationName = animationName;
+                heart.style.opacity = opacity;
+                heart.style.setProperty('--start-rotate', `${startRotate}deg`);
+                heart.style.setProperty('--end-rotate', `${endRotate}deg`);
+                heart.style.setProperty('--end-x', `${endX}px`);
+                heart.style.setProperty('--heart-opacity', opacity);
+                
+                // Set heart color based on type
+                if (heartType === 'stage1-initial') {
+                    // Stage 1: Start with all pink hearts
+                    heart.classList.add('pink');
+                } else if (heartType === 'stage1-all-black') {
+                    // Stage 1: All black hearts (Thank you screen)
+                    heart.classList.add('black');
+                } else if (heartType === 'stage2') {
+                    // Stage 2: All red hearts
+                    heart.classList.add('red');
+                } else if (heartType === 'stage3') {
+                    // Stage 3: Mixed red and pink hearts
+                    if (i % 2 === 0) {
+                        heart.classList.add('red');
+                    } else {
+                        heart.classList.add('pink');
+                    }
+                }
+                
+                floatingHeartsContainer.appendChild(heart);
+                floatingHearts.push(heart);
+            }
+        }
+        
+        // Create static background hearts with ENHANCED ROTATION
+        function createStaticHearts(heartType) {
+            // Clear existing static hearts
+            staticHeartsContainer.innerHTML = '';
+            staticHearts = [];
+            
+            for (let i = 0; i < totalStaticHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'static-heart';
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                
+                // Random position - DISTRIBUTED ALL OVER
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 35 + 10; // 10px to 45px
+                const delay = Math.random() * 15;
+                const duration = 10 + Math.random() * 10;
+                
+                // Random starting rotation angle
+                const startAngle = Math.random() * 360;
+                
+                heart.style.left = `${left}%`;
+                heart.style.top = `${top}%`;
+                heart.style.fontSize = `${size}px`;
+                heart.style.animationDelay = `${delay}s`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.setProperty('--start-angle', `${startAngle}deg`);
+                
+                // Set heart color based on type
+                if (heartType === 'stage1-initial') {
+                    // Stage 1: Start with all pink hearts
+                    heart.classList.add('pink');
+                } else if (heartType === 'stage1-all-black') {
+                    // Stage 1: All black hearts (Thank you screen)
+                    heart.classList.add('black');
+                } else if (heartType === 'stage2') {
+                    // Stage 2: All red hearts
+                    heart.classList.add('red');
+                } else if (heartType === 'stage3') {
+                    // Stage 3: Mixed red and pink hearts
+                    if (i % 2 === 0) {
+                        heart.classList.add('red');
+                    } else {
+                        heart.classList.add('pink');
+                    }
+                }
+                
+                staticHeartsContainer.appendChild(heart);
+                staticHearts.push(heart);
+            }
+        }
+        
+        // Create extra background hearts
+        function createExtraHearts(heartType) {
+            // Clear existing extra hearts
+            extraHeartsContainer.innerHTML = '';
+            extraHearts = [];
+            
+            for (let i = 0; i < totalExtraHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'extra-heart';
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                
+                // Random position - DISTRIBUTED ALL OVER
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 30 + 8; // 8px to 38px
+                const delay = Math.random() * 25;
+                const duration = 40 + Math.random() * 40;
+                
+                // Random starting rotation angle
+                const startAngle = Math.random() * 360;
+                
+                heart.style.left = `${left}%`;
+                heart.style.top = `${top}%`;
+                heart.style.fontSize = `${size}px`;
+                heart.style.animationDelay = `${delay}s`;
+                heart.style.animationDuration = `${duration}s`;
+                heart.style.setProperty('--start-angle', `${startAngle}deg`);
+                
+                // Set heart color based on type
+                if (heartType === 'stage1-initial') {
+                    // Stage 1: Start with all pink hearts
+                    heart.classList.add('pink');
+                } else if (heartType === 'stage1-all-black') {
+                    // Stage 1: All black hearts (Thank you screen)
+                    heart.classList.add('black');
+                } else if (heartType === 'stage2') {
+                    // Stage 2: All red hearts
+                    heart.classList.add('red');
+                } else if (heartType === 'stage3') {
+                    // Stage 3: Mixed red and pink hearts
+                    if (i % 2 === 0) {
+                        heart.classList.add('red');
+                    } else {
+                        heart.classList.add('pink');
+                    }
+                }
+                
+                extraHeartsContainer.appendChild(heart);
+                extraHearts.push(heart);
+            }
+        }
+        
+        // Create density background hearts
+        function createDensityHearts(heartType) {
+            // Clear existing density hearts
+            densityHeartsContainer.innerHTML = '';
+            densityHearts = [];
+            
+            for (let i = 0; i < totalDensityHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'density-heart';
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                
+                // Random position - DISTRIBUTED ALL OVER
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 25 + 5; // 5px to 30px
+                const delay = Math.random() * 20;
+                const duration = 30 + Math.random() * 30;
+                
+                heart.style.left = `${left}%`;
+                heart.style.top = `${top}%`;
+                heart.style.fontSize = `${size}px`;
+                heart.style.animationDelay = `${delay}s`;
+                heart.style.animationDuration = `${duration}s`;
+                
+                // Set heart color based on type
+                if (heartType === 'stage1-initial') {
+                    // Stage 1: Start with all pink hearts
+                    heart.classList.add('pink');
+                } else if (heartType === 'stage1-all-black') {
+                    // Stage 1: All black hearts (Thank you screen)
+                    heart.classList.add('black');
+                } else if (heartType === 'stage2') {
+                    // Stage 2: All red hearts
+                    heart.classList.add('red');
+                } else if (heartType === 'stage3') {
+                    // Stage 3: Mixed red and pink hearts
+                    if (i % 2 === 0) {
+                        heart.classList.add('red');
+                    } else {
+                        heart.classList.add('pink');
+                    }
+                }
+                
+                densityHeartsContainer.appendChild(heart);
+                densityHearts.push(heart);
+            }
+        }
+        
+        // Update background hearts for stage 1 based on "No" clicks
+        function updateStage1Hearts() {
+            // Calculate how many hearts should be black
+            // Each "No" click turns hearts black across all layers
+            const floatingHeartsToTurnBlack = Math.min(stage1NoCount * 64, totalFloatingHearts); // 64 per click
+            const staticHeartsToTurnBlack = Math.min(stage1NoCount * 24, totalStaticHearts);    // 24 per click
+            const extraHeartsToTurnBlack = Math.min(stage1NoCount * 20, totalExtraHearts);      // 20 per click
+            const densityHeartsToTurnBlack = Math.min(stage1NoCount * 20, totalDensityHearts);  // 20 per click
+            
+            // Update floating heart colors
+            for (let i = 0; i < floatingHearts.length; i++) {
+                if (i < floatingHeartsToTurnBlack) {
+                    // Turn heart black
+                    floatingHearts[i].classList.remove('pink');
+                    floatingHearts[i].classList.add('black');
+                } else {
+                    // Keep heart pink
+                    floatingHearts[i].classList.remove('black');
+                    floatingHearts[i].classList.add('pink');
+                }
+            }
+            
+            // Update static heart colors
+            for (let i = 0; i < staticHearts.length; i++) {
+                if (i < staticHeartsToTurnBlack) {
+                    // Turn heart black
+                    staticHearts[i].classList.remove('pink');
+                    staticHearts[i].classList.add('black');
+                } else {
+                    // Keep heart pink
+                    staticHearts[i].classList.remove('black');
+                    staticHearts[i].classList.add('pink');
+                }
+            }
+            
+            // Update extra heart colors
+            for (let i = 0; i < extraHearts.length; i++) {
+                if (i < extraHeartsToTurnBlack) {
+                    // Turn heart black
+                    extraHearts[i].classList.remove('pink');
+                    extraHearts[i].classList.add('black');
+                } else {
+                    // Keep heart pink
+                    extraHearts[i].classList.remove('black');
+                    extraHearts[i].classList.add('pink');
+                }
+            }
+            
+            // Update density heart colors
+            for (let i = 0; i < densityHearts.length; i++) {
+                if (i < densityHeartsToTurnBlack) {
+                    // Turn heart black
+                    densityHearts[i].classList.remove('pink');
+                    densityHearts[i].classList.add('black');
+                } else {
+                    // Keep heart pink
+                    densityHearts[i].classList.remove('black');
+                    densityHearts[i].classList.add('pink');
+                }
+            }
+        }
+        
+        // Video control functions
+        function toggleVideoPlayPause() {
+            if (isVideoPlaying) {
+                stage2Video.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                stage2Video.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isVideoPlaying = !isVideoPlaying;
+        }
+        
+        function toggleVideoVolume() {
+            if (isVideoMuted) {
+                stage2Video.muted = false;
+                volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                stage2Video.muted = true;
+                volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            }
+            isVideoMuted = !isVideoMuted;
+        }
+        
+        // Stage 1 functions
+        function handleStage1Yes() {
+            // Transition to stage 2
+            stage1.classList.add('hidden');
+            stage2.classList.remove('hidden');
+            
+            // Reset stage 2 image to first one
+            stage2Image.src = stage2Images[0];
+            stage2Counter.textContent = "";
+            stage2NoBtn.style.display = 'flex';
+            
+            // Make sure image container is shown and video container is hidden
+            stage2ImageContainer.style.display = 'block';
+            stage2VideoContainer.style.display = 'none';
+            
+            // Stop video if playing
+            stage2Video.pause();
+            isVideoPlaying = false;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            
+            // Change background hearts to red for stage 2
+            createFloatingHearts('stage2');
+            createStaticHearts('stage2');
+            createExtraHearts('stage2');
+            createDensityHearts('stage2');
+        }
+        
+        function handleStage1No() {
+            stage1NoCount++;
+            
+            if (stage1NoCount <= 6) {
+                // Change to the next image (1-6)
+                stage1Image.src = stage1Images[stage1NoCount];
+                
+                // Update background hearts (turn some pink hearts to black)
+                updateStage1Hearts();
+            } else if (stage1NoCount === 7) {
+                // Final state - hide buttons, change text
+                stage1Image.src = stage1Images[6];
+                stage1YesBtn.style.display = 'none';
+                stage1NoBtn.style.display = 'none';
+                document.querySelector('.stage-1 h1').textContent = "Thank you.";
+                stage1Counter.textContent = "";
+                
+                // Change the stage text
+                document.querySelector('.stage-1 .stage-text').innerHTML = `
+  <span style="font-weight: bold; color:#333;">I OFFERED MY HEART WITH HOPE,</span><br>
+  <span style="font-weight: bold; color:#000000;">YOU RETURNED IT WITH TRUTH.</span>
+`;
+
+                
+                // Change ALL background hearts to black
+                createFloatingHearts('stage1-all-black');
+                createStaticHearts('stage1-all-black');
+                createExtraHearts('stage1-all-black');
+                createDensityHearts('stage1-all-black');
+            }
+        }
+        
+        // Stage 2 functions
+        function handleStage2Yes() {
+            // Transition to stage 3
+            stage2.classList.add('hidden');
+            stage3.classList.remove('hidden');
+            
+            // Stop video if playing
+            stage2Video.pause();
+            isVideoPlaying = false;
+            
+            // Change background hearts for stage 3
+            createFloatingHearts('stage3');
+            createStaticHearts('stage3');
+            createExtraHearts('stage3');
+            createDensityHearts('stage3');
+        }
+        
+        function handleStage2No() {
+            stage2NoCount++;
+            
+            if (stage2NoCount <= 5) {
+                // Change to the next image (1-5)
+                stage2Image.src = stage2Images[stage2NoCount];
+                stage2Counter.textContent = ``;
+                
+                // Make sure image container is shown and video container is hidden
+                stage2ImageContainer.style.display = 'block';
+                stage2VideoContainer.style.display = 'none';
+                
+                // Keep hearts red for stage 2 (no change)
+            } else if (stage2NoCount === 6) {
+                // Final state - hide the No button and show video
+                stage2Image.src = stage2Images[5];
+                stage2NoBtn.style.display = 'none';
+                stage2Counter.textContent = "";
+                
+                // Hide image container and show video container
+                stage2ImageContainer.style.display = 'none';
+                stage2VideoContainer.style.display = 'block';
+                
+                // Try to autoplay video
+                stage2Video.play().then(() => {
+                    isVideoPlaying = true;
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                }).catch(() => {
+                    // If autoplay fails, show play button
+                    isVideoPlaying = false;
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                });
+            }
+        }
+        
+        // Event listeners
+        stage1YesBtn.addEventListener('click', handleStage1Yes);
+        stage1NoBtn.addEventListener('click', handleStage1No);
+        stage2YesBtn.addEventListener('click', handleStage2Yes);
+        stage2NoBtn.addEventListener('click', handleStage2No);
+        
+        // Video control event listeners
+        playPauseBtn.addEventListener('click', toggleVideoPlayPause);
+        volumeBtn.addEventListener('click', toggleVideoVolume);
+        
+        // Video event listeners
+        stage2Video.addEventListener('play', () => {
+            isVideoPlaying = true;
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        });
+        
+        stage2Video.addEventListener('pause', () => {
+            isVideoPlaying = false;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        });
+        
+        // Initialize the page
+        function init() {
+            // Start with all pink hearts for stage 1 - 640+ HEARTS DISTRIBUTED EVERYWHERE
+            createFloatingHearts('stage1-initial');
+            createStaticHearts('stage1-initial');
+            createExtraHearts('stage1-initial');
+            createDensityHearts('stage1-initial');
+            
+            // Set initial images
+            stage1Image.src = stage1Images[0];
+            stage2Image.src = stage2Images[0];
+            
+            // Set video source 
+            // stage2Video.src = "valentine_video.mp4"; 
+            
+            // Set image captions with instructions for replacement
+            document.querySelectorAll('.image-caption').forEach(caption => {
+                const originalText = caption.textContent;
+                caption.textContent = `${originalText} `;
+                caption.style.color = '#ff4081';
+                caption.style.fontWeight = 'bold';
+            });
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('DOMContentLoaded', init);
+        
+        // Add click animation to all buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
